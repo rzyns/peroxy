@@ -24,24 +24,57 @@
   //   onResponseData: onResponseData
   // }
 
-  var routes = [];
+  var type = require('typechecker');
 
-  function add(matcher, fn) {
-    routes.push({matcher: matcher, fn: fn});
-  }
+  function r() {
+    var routes = [];
 
-  function router(req, res, next) {
-    for (var i = 0; i < matchers.length; i++) {
-      if (matchers[i].matcher(req)) {
-        return matchers[i].fn(req, res, next);
-      }
+    function add(matcher, fn) {
+      routes.push({matcher: matcher, fn: fn});
     }
 
-    return next();
+    /*
+     * host: string|regex|array
+     * method: string|regex|array
+     * url: string|regex|array
+     */
+    function match(obj) {
+      return function(req) {
+        return Object.keys(obj).reduce(function (acc, cur) {
+          return !!acc && _matches(req[cur], obj[cur]);
+        }, true);
+      };
+    }
+
+    function _matches(val, cmp) {
+      var ret = false;
+
+      switch (true) {
+        case type.isString(cmp): ret = val === cmp;             break;
+        case type.isRegExp(cmp): ret = cmp.test(val);           break;
+        case type.isArray(cmp):  ret = cmp.indexOf(val) !== -1; break;
+      }
+
+      return ret;
+    }
+
+    function router(req, res, next) {
+      for (var i = 0; i < routes.length; i++) {
+        if (routes[i].matcher(req)) {
+          return routes[i].fn(req, res, next);
+        }
+      }
+
+      return next();
+    }
+
+    router.add = add;
+    router.match = match;
+    router._matches = _matches;
+    router._routes = routes;
+
+    return router;
   }
 
-  module.exports = {
-    add: add,
-    router: router
-  };
-});
+  module.exports = r;
+})();

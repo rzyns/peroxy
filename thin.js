@@ -1,10 +1,13 @@
 var fs = require('fs');
 var https = require('https');
 var path = require('path');
+var child_process = require('child_process');
 
 var Thin = require('thin');
 
 var proxy = new Thin();
+
+var router = require('./modules/router.js')();
 
 // `req` and `res` params are `http.ClientRequest` and `http.ServerResponse` accordingly
 // be sure to check http://nodejs.org/api/http.html for more details
@@ -15,16 +18,36 @@ proxy.use(function(req, res, next) {
 });
 
 proxy.use(function (req, res, next) {
-  req.once('data', function (data) {
-    if (data == 'foo') {
-      res.write('yourmom!\n', function () {
-        next();
-      });
-    } else {
-      next();
-    }
-  });
+  if (typeof req.host !== 'undefined') {
+    req.originalHost = req.host;
+  }
+
+  if (req.headers) {
+    // req.host should be undefined if req.headers.host is undefined
+    req.host = req.headers.host;
+  }
+
+  next();
 });
+
+router.add(function (req) {
+  console.log(req.headers.host);
+  return false;
+}, function () {});
+
+router.add(function (req) {
+  return req.url === '/foo' && req.method === 'GET';
+}, function (req, res, next) {
+  res.end('I ate your face!');
+});
+
+router.add(function (req) {
+  return req.url === '/bar' && req.method === 'POST';
+}, function (req, res, next) {
+  res.end('I ate your mom\'s face!');
+});
+
+proxy.use(router);
 
 // you can add different layers of "middleware" similar to "connect",
 // but with few exclusions
@@ -56,13 +79,21 @@ https.createServer({
 }).listen(3001, function(err) {
   if (err) console.log('https server', err);
 
-  require('child_process').exec('/usr/bin/env https_proxy=http://localhost:8081 curl -k -X POST -d foo https://www.google.com', function (err, stdout, stderr) {
+  child_process.exec('/usr/bin/env https_proxy=http://localhost:8081 curl -k -X POST -d foo https://www.google.com/bar', function (err, stdout, stderr) {
     if (err) {
-      console.error(err);
+      console.error('First: %s', err);
     }
 
     // console.log('STDERR: ', stderr.toString());
-    console.log(stdout.toString());
+    console.log('First: %s', stdout.toString());
+  });
+
+  child_process.exec('/usr/bin/env https_proxy=http://localhost:8081 curl -k https://www.google.com/foo', function (err, stdout, stderr) {
+    if (err) {
+      console.error('Second: %s', err);
+    }
+
+    console.log('Second: %s', stdout.toString());
   });
 });
 

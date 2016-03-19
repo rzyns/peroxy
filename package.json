@@ -3,17 +3,23 @@
   "version": "1.0.0",
   "description": "a simple proxy",
   "devDependencies": {
-    "filternet": "0.0.2",
-    "http-proxy": "^1.13.2",
-    "thin": "^0.3.1"
+    "sinon": "^1.17.3",
+    "sinon-chai": "^2.8.0",
+    "sinon-chai-in-order": "^0.1.0",
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5"
   },
   "dependencies": {
+    "http-proxy": "^1.13.2",
+    "filternet": "0.0.2",
     "balboa": "^0.1.2",
     "bufferjs": "^1.1.0",
     "circular-json": "^0.3.0",
     "express": "^4.13.4",
     "http-mitm-proxy": "^0.4.0",
     "ssl-root-cas": "^1.1.10",
-    "tunnel": "0.0.4"
+    "tunnel": "0.0.4",
+    "typechecker": "^4.1.0",
+    "thin": "^0.3.1"
   }
 }
