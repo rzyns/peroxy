@@ -1,0 +1,11 @@
+{
+  "name": "peroxy",
+  "version": "1.0.0",
+  "description": "a simple proxy",
+  "devDependencies": {
+    "http-proxy": "^1.13.2"
+  },
+  "dependencies": {
+    "ssl-root-cas": "^1.1.10"
+  }
+}
