@@ -34,3 +34,5 @@ node_modules
 
 # Certs
 *.pem
+
+.http-mitm-proxy

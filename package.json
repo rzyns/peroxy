@@ -3,9 +3,17 @@
   "version": "1.0.0",
   "description": "a simple proxy",
   "devDependencies": {
-    "http-proxy": "^1.13.2"
+    "filternet": "0.0.2",
+    "http-proxy": "^1.13.2",
+    "thin": "^0.3.1"
   },
   "dependencies": {
-    "ssl-root-cas": "^1.1.10"
+    "balboa": "^0.1.2",
+    "bufferjs": "^1.1.0",
+    "circular-json": "^0.3.0",
+    "express": "^4.13.4",
+    "http-mitm-proxy": "^0.4.0",
+    "ssl-root-cas": "^1.1.10",
+    "tunnel": "0.0.4"
   }
 }
