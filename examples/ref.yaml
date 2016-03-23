@@ -1,0 +1,11 @@
+# Routes are the top level
+OrderMotion:                        # name
+                                    # Routes are next
+  match:
+    host: '*.ordermotion.com'
+    url: /hdde/xml/udi.asp
+    body: asdf
+
+  response:
+    status code: 200
+    content file: /path/to/file.ext

@@ -1,26 +1,17 @@
-// require('ssl-root-cas')
-//   .inject()
-//   .addFile(__dirname + '/fullchain.pem')
-//   .addFile(__dirname + '/chain.pem')
-//   .addFile(__dirname + '/cert.pem')
-// ;
-
-var https = require('https');
-var http = require('http');
+#! /usr/bin/env node
 var fs = require('fs');
+var https = require('https');
+var path = require('path');
+var child_process = require('child_process');
 
-https.createServer({
-    key: fs.readFileSync(__dirname + '/privkey.pem'),
-    cert: fs.readFileSync(__dirname + '/cert.pem'),
-    ca: fs.readFileSync(__dirname + '/chain.pem')
-}, function (req, res) {
-  console.log('hi');
-  res.write('foo');
-  res.end();
-}).listen(8009);
+var Thin = require('thin');
 
-http.createServer(function (req, res) {
-  res.write('foo');
-  res.end();
-}); //.listen(8009);
+var proxy = new Thin();
 
+var router = require('./modules/router.js')();
+
+var yargs = require('yargs');
+
+yargs.describe('input', );
+
+console.log(argv);
