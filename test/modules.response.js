@@ -39,9 +39,9 @@ describe('I ate some garbidge', function () {
 
   MockResponse.prototype.write = function write(a, cb) {
     if (this.closed) {
-      throw new Error('Write after end, jerk!');
+      return cb(new Error('Write after end, jerk!'));
     }
-    cb();
+    return cb();
   };
 
   MockResponse.prototype.writeHead = function writeHead(code, text) {
@@ -56,13 +56,15 @@ describe('I ate some garbidge', function () {
     var res = new MockResponse();
     sinon.stub(res, 'end');
     sinon.stub(res, 'setHeader');
-    sinon.stub(res, 'write');
+    var s = sinon.stub(res, 'write');
+    s.callsArg(1);
 
-    respond(res, testData.response).then(function (results) {
+    respond(testData.response)(res).then(function (results) {
       expect(res.end).to.have.callCount(1);
       expect(res.setHeader).to.have.callCount(1);
       expect(res.setHeader).to.have.been.calledWithExactly('Content-Type', 'text/plain');
       expect(res.write).to.have.callCount(1);
+      expect(res.write).to.have.been.calledWith(new Buffer('this is the body\n'));
 
       expect(results).to.have.property('headers');
       expect(results).to.have.deep.property('headers.Content-Type', 'text/plain');
