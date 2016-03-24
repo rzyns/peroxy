@@ -4,7 +4,8 @@
   var assign = require('lodash.assign');
 
   function respond(opts) {
-    return function (res) {
+    return function (req, res, next) {
+      debugger;
       var promises = [];
 
       if (typeof opts.statusCode !== 'undefined') {
@@ -44,7 +45,7 @@
 
       return Promise.all(promises).then(function (results) {
         res.end();
-        return results.reduce(assign);
+        return results.reduce(assign, {});
       }).catch(function (err) {
         throw err;
         res.writeHead(500, 'Proxy error from doing proxy things....');

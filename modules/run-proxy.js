@@ -3,6 +3,7 @@
 
   var fs = require('fs');
   var path = require('path');
+  var recursiveCamelCaseKeys = require('../lib/recursive-camel-case-keys.js');
 
   function readConfigsDir(dir) {
     var p = new Promise(function (resolve, reject) {
@@ -36,7 +37,7 @@
 
         fileBodies.forEach(function (body) {
           yaml.safeLoadAll(body, function (doc) {
-            data.push(doc);
+            data.push(recursiveCamelCaseKeys(doc));
           });
         });
 
@@ -55,13 +56,29 @@
     return function (argv) {
       readConfigsDir(process.cwd() + '/examples')
         .then(function (cfgs) {
-          console.log('As promised!');
-          console.log(argv);
           cfgs.forEach(configLoader(proxy, router, respond));
+
           proxy.use(function (req, res, next) {
+            if (typeof req.host !== 'undefined') {
+              req.originalHost = req.host;
+            }
+
+            if (req.headers) {
+              req.host = req.headers.host;
+            }
+
+            next();
+          });
+
+          // This is important, apparently :P
+          proxy.use(router);
+
+          proxy.use(function (req, res, next) {
+            console.log('Host %s', req.host);
             console.log('Proxying %s', req.url);
             next();
           });
+
           proxy.listen(argv.port, 'localhost', function (err) {
             if (err) {
               console.error('this is broken for some reason!');

@@ -59,7 +59,7 @@ describe('I ate some garbidge', function () {
     var s = sinon.stub(res, 'write');
     s.callsArg(1);
 
-    respond(testData.response)(res).then(function (results) {
+    respond(testData.response)(null, res).then(function (results) {
       expect(res.end).to.have.callCount(1);
       expect(res.setHeader).to.have.callCount(1);
       expect(res.setHeader).to.have.been.calledWithExactly('Content-Type', 'text/plain');

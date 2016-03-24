@@ -6,9 +6,8 @@ name: OrderMotion
 match:
   host: 'api.ordermotion.com'
   url: /hdde/xml/udi.asp
-  body: asdf
 
 response:
   status code: 200
-  content file: /path/to/file.ext
+  content file: test/files/sample.txt
 ...
