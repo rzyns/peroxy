@@ -2,6 +2,7 @@
   'use strict';
 
   var assign = require('lodash.assign');
+  var fs = require('fs');
 
   function respond(opts) {
     return function (req, res, next) {
@@ -26,7 +27,7 @@
 
       if (opts.contentFile) {
         promises.push(new Promise(function (resolve, reject) {
-          require('fs').readFile(opts.contentFile, function (err, data) {
+          fs.readFile(opts.contentFile, function (err, data) {
             if (err) {
               return reject(err);
             } else {

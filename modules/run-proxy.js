@@ -4,6 +4,7 @@
   var fs = require('fs');
   var path = require('path');
   var recursiveCamelCaseKeys = require('../lib/recursive-camel-case-keys.js');
+  var yaml = require('js-yaml');
 
   function readConfigsDir(dir) {
     var p = new Promise(function (resolve, reject) {
@@ -32,7 +33,6 @@
           });
         });
       })).then(function (fileBodies) {
-        var yaml = require('js-yaml');
         var data = [];
 
         fileBodies.forEach(function (body) {
@@ -74,8 +74,7 @@
           proxy.use(router);
 
           proxy.use(function (req, res, next) {
-            console.log('Host %s', req.host);
-            console.log('Proxying %s', req.url);
+            console.log('Proxying %s%s', req.host, req.url);
             next();
           });
 
