@@ -54,7 +54,8 @@
 
   function runProxy(proxy, router, respond) {
     return function (argv) {
-      readConfigsDir(process.cwd() + '/examples')
+      var p =  path.join(process.cwd(), (argv.d || 'examples'))
+      readConfigsDir(p)
         .then(function (cfgs) {
           cfgs.forEach(configLoader(proxy, router, respond));
 
@@ -87,6 +88,7 @@
           });
         })
         .catch(function (err) {
+          console.error(err);
           throw err;
         });
     };
