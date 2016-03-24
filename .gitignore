@@ -36,3 +36,6 @@ node_modules
 *.pem
 
 .http-mitm-proxy
+
+# Sublime Files
+*.sublime-*
