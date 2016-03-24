@@ -5,7 +5,6 @@
 
   function respond(opts) {
     return function (req, res, next) {
-      debugger;
       var promises = [];
 
       if (typeof opts.statusCode !== 'undefined') {
