@@ -32,6 +32,7 @@
     "filternet": "0.0.2",
     "http-mitm-proxy": "^0.4.0",
     "http-proxy": "^1.13.2",
+    "is-plain-object": "^2.0.1",
     "js-yaml": "^3.5.5",
     "lodash.assign": "^4.0.6",
     "ssl-root-cas": "^1.1.10",

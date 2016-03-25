@@ -36,7 +36,7 @@
         var data = [];
 
         fileBodies.forEach(function (body) {
-          yaml.safeLoadAll(body, function (doc) {
+          yaml.loadAll(body, function (doc) {
             data.push(recursiveCamelCaseKeys(doc));
           });
         });
@@ -72,16 +72,32 @@
             next();
           });
 
-          proxy.use(require('body-parser').text({type: '*/*'}));
+          // proxy.use(require('body-parser').text({type: '*/*'}));
 
-          proxy.use(function (req, res, next) {
-            console.log('Proxying %s%s', req.host, req.url);
-            next();
-          });
+          // proxy.use(function (req, res, next) {
+          //   console.log('Proxying %s%s', req.host, req.url);
+          //   next();
+          // });
 
           proxy.use(router);
 
+          proxy.use(function (req, res, next) {
+            proxy.forward(req, res, function (proxyReq) {
+              proxyReq.on('response', function (response) {
+                res.writeHead(response.statusCode, response.headers);
+                response.pipe(res);
+              });
+
+              proxyReq.on('error', function (err) {
+                console.log('Air Roar! Air Roar!');
+                console.log(err);
+                res.end();
+              })
+            });
+          });
+
           proxy.on('error', function (err) {
+            console.log('Air Roar! Air Roar!');
             console.log(err, err.stack.split('\n'));
           });
 

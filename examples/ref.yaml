@@ -6,6 +6,7 @@ name: OrderMotion
 match:
   host: 'api.ordermotion.com'
   url: /hdde/xml/udi.asp
+  body: !!js/regexp /^<YourMom/
 
 response:
   status code: 200
