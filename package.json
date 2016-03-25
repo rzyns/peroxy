@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "balboa": "^0.1.2",
+    "body-parser": "^1.15.0",
     "bufferjs": "^1.1.0",
     "camelcase": "^2.1.1",
     "chalk": "^1.1.1",

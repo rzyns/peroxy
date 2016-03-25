@@ -59,6 +59,7 @@
         .then(function (cfgs) {
           cfgs.forEach(configLoader(proxy, router, respond));
 
+          // This is important, apparently :P
           proxy.use(function (req, res, next) {
             if (typeof req.host !== 'undefined') {
               req.originalHost = req.host;
@@ -71,12 +72,17 @@
             next();
           });
 
-          // This is important, apparently :P
-          proxy.use(router);
+          proxy.use(require('body-parser').text({type: '*/*'}));
 
           proxy.use(function (req, res, next) {
             console.log('Proxying %s%s', req.host, req.url);
             next();
+          });
+
+          proxy.use(router);
+
+          proxy.on('error', function (err) {
+            console.log(err, err.stack.split('\n'));
           });
 
           proxy.listen(argv.port, 'localhost', function (err) {
