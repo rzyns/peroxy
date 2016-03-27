@@ -72,17 +72,19 @@
             next();
           });
 
-          // proxy.use(require('body-parser').text({type: '*/*'}));
+          proxy.use(require('body-parser').text({type: '*/*'}));
 
-          // proxy.use(function (req, res, next) {
-          //   console.log('Proxying %s%s', req.host, req.url);
-          //   next();
-          // });
+          proxy.use(function (req, res, next) {
+            console.log('Proxying %s%s', req.host, req.url);
+            next();
+          });
 
           proxy.use(router);
 
           proxy.use(function (req, res, next) {
+            console.log('forwarding');
             proxy.forward(req, res, function (proxyReq) {
+              console.log('forward callback');
               proxyReq.on('response', function (response) {
                 res.writeHead(response.statusCode, response.headers);
                 response.pipe(res);

@@ -4,13 +4,13 @@ var https = require('https');
 var path = require('path');
 var child_process = require('child_process');
 
-var Thin = require('thin');
+// var Thin = require('thin');
 var router = require('./modules/router.js')();
 var respond = require('./modules/response');
 
 var yargs = require('yargs');
 
-var proxy = new Thin();
+var proxy = new (require('./modules/proxy.js'))();
 
 yargs
   .usage(`$0 <cmd> [args]`)
