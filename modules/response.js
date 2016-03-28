@@ -25,6 +25,16 @@
         }
       }
 
+      if (typeof opts.content !== 'undefined') {
+        promises.push(new Promise(function (resolve, reject) {
+          return res.write(opts.content, function (err) {
+            if (err) return reject(err);
+
+            return resolve({content: opts.content});
+          });
+        }));
+      }
+
       if (opts.contentFile) {
         promises.push(new Promise(function (resolve, reject) {
           fs.readFile(opts.contentFile, function (err, data) {

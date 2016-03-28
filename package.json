@@ -1,6 +1,6 @@
 {
   "name": "peroxy",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "a simple proxy",
   "author": "Janusz Dziurzyński <john@evesaddiction.com>",
   "bin": "./index.js",

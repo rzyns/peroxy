@@ -23,6 +23,16 @@ describe('I ate some garbidge', function () {
     }
   };
 
+  var testData2 = {
+    response: {
+      headers: {
+        'Content-Type': 'text/plain'
+      },
+      statusCode: 200,
+      content: 'this is my body!'
+    }
+  };
+
   function MockResponse() {
     this.headers = {};
   }
@@ -52,13 +62,18 @@ describe('I ate some garbidge', function () {
     this.closed = true;
   };
 
-  it('But it wasn\'t very tasty', function (done) {
-    var res = new MockResponse();
+  var res;
+
+  beforeEach(function () {
+    res = new MockResponse();
     sinon.stub(res, 'end');
-    sinon.stub(res, 'setHeader');
+    sinon.stub(res, 'setHeader')
+
     var s = sinon.stub(res, 'write');
     s.callsArg(1);
+  });
 
+  it('But it wasn\'t very tasty', function (done) {
     respond(testData.response)(null, res).then(function (results) {
       expect(res.end).to.have.callCount(1);
       expect(res.setHeader).to.have.callCount(1);
@@ -70,6 +85,24 @@ describe('I ate some garbidge', function () {
       expect(results).to.have.deep.property('headers.Content-Type', 'text/plain');
       expect(results).to.have.property('statusCode', 200);
       expect(results).to.have.property('content');
+
+      done();
+    }).catch(done);
+  });
+
+  it('should handle content properly', function (done) {
+    respond(testData2.response)(null, res).then(function (results) {
+      expect(res.end).to.have.callCount(1);
+      expect(res.setHeader).to.have.callCount(1);
+      expect(res.setHeader).to.have.been.calledWithExactly('Content-Type', 'text/plain');
+      expect(res.write).to.have.callCount(1);
+      expect(res.write).to.have.been.calledWith('this is my body!');
+
+      expect(results).to.have.property('headers');
+      expect(results).to.have.deep.property('headers.Content-Type', 'text/plain');
+      expect(results).to.have.property('statusCode', 200);
+      expect(results).to.have.property('content');
+      expect(results.content.toString()).to.equal('this is my body!');
 
       done();
     }).catch(done);
