@@ -4,7 +4,7 @@ name: OrderMotion
 
 # Routes are next
 match:
-  host: 'api.ordermotion.com'
+  host: 'api.omx.ordermotion.com'
   url: /hdde/xml/udi.asp
   body: !!js/regexp /^<YourMom/
 

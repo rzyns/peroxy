@@ -44,7 +44,7 @@ function Mitm(opts) {
   this.socket = os.tmpdir() + '/node-thin.' + process.pid + '.sock';
   this.interceptors = [];
 
-  this.log = new Logger(true);
+  this.log = new Logger(false); // true for debug
 }
 
 util.inherits(Mitm, EventEmitter);
